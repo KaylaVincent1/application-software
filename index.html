@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Software Showdown | Grade 10 IT</title>
+<style>
+:root{--bg:#0f2a1f;--panel:#17402e;--line:#2a6a4d;--ink:#fdf6e3;--mut:#a9cdb8;--gold:#ffc72c;--good:#34d27b;--bad:#ff5a5f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:17px/1.45 "Trebuchet MS","Segoe UI",Roboto,sans-serif;display:flex;justify-content:center}
+#app{width:100%;max-width:620px;padding:14px 14px 40px}
+h1{font-size:2.3rem;line-height:1.05;margin:.4em 0 .2em;color:var(--gold)}
+h2{font-size:1.4rem;margin:.6em 0 .4em}
+p{margin:.4em 0}.mut{color:var(--mut)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.top{display:flex;justify-content:space-between;gap:8px;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:700;margin-bottom:12px}
+.big{display:block;width:100%;margin-top:14px;padding:14px;border:0;border-radius:12px;background:var(--gold);color:#2b2100;font-weight:800;font-size:1.1rem}
+.ghost{background:transparent;border:2px solid var(--line);color:var(--ink)}
+.lvl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;width:100%;text-align:left;margin-bottom:10px;padding:12px 14px;background:var(--panel);border:2px solid var(--line);border-radius:12px}
+.lvl small{color:var(--mut)}.lvl span{grid-row:1/3;grid-column:2;align-self:center;color:var(--gold);letter-spacing:2px}
+.timer{height:10px;background:var(--panel);border-radius:6px;overflow:hidden;margin:6px 0 14px}
+#tb{height:100%;width:100%;background:var(--gold)}
+.q{font-size:1.2rem;font-weight:700;margin:0 0 12px}
+.opt{display:block;width:100%;text-align:left;margin-bottom:9px;padding:13px 14px;background:var(--panel);border:2px solid var(--line);border-radius:12px;font-weight:600}
+.opt:hover:not(:disabled){border-color:var(--gold)}
+.opt.good{background:#1d6a43;border-color:var(--good)}.opt.bad{background:#6a2326;border-color:var(--bad)}
+.fb{margin-top:12px;padding:12px 14px;border-left:6px solid var(--gold);background:var(--panel);border-radius:0 12px 12px 0}
+.fb b{font-size:1.1rem}
+.tag{display:inline-block;background:var(--gold);color:#2b2100;font-weight:800;border-radius:8px;padding:2px 10px;font-size:.9rem}
+.stars{font-size:2.4rem;color:var(--gold);letter-spacing:6px;text-align:center;margin:8px 0}
+.stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
+@media (prefers-reduced-motion:no-preference){.fb{animation:up .25s ease-out}@keyframes up{from{transform:translateY(8px);opacity:0}}}
+</style></head><body><div id="app"></div>
+<script>
+const R=[
+{s:19,e:"🧩",t:"App types",o:["Enterprise","Information worker","Content access","Educational","Media development"],
+k:"Application software performs specific end-user tasks. Know the five categories.",
+q:[["A supermarket chain uses one system to handle processes and data flow across all its branches.","Enterprise","Enterprise software manages processes and data across a large organisation."],
+["A student uses a spreadsheet to build the tables for her SBA project.","Information worker","Information worker software lets individuals create and manage information for their own projects."],
+["You stream music on your phone. You can listen, but you cannot edit the songs.","Content access","Content access software is for viewing or listening to digital content, not editing it."],
+["A CSEC practice app gives you tests and tracks your progress.","Educational","Educational software delivers tests and tracks progress through material."],
+["A designer makes a flyer for a school fete and edits a short video.","Media development","Media development covers graphics, desktop publishing, animation, audio and video."]]},
+{s:20,e:"🔧",t:"General or special?",o:["General-purpose","Special-purpose"],
+k:"General-purpose = many tasks (word processor, spreadsheet, database). Special-purpose = one task.",
+q:[["Microsoft Excel: calculate, analyse and manage lists.","General-purpose","A spreadsheet is flexible and used for many different tasks."],
+["Photoshop: enhance photographs.","Special-purpose","It is narrowly focused on one job, editing images."],
+["Microsoft Word: letters, reports, CVs and more.","General-purpose","One word processor covers a variety of tasks."],
+["QuickTime: view and listen to music and videos.","Special-purpose","A media player does one task."],
+["Dreamweaver: create websites.","Special-purpose","Web page design is a single, narrow task."],
+["Microsoft Access: create databases to manage information.","General-purpose","Databases can be used for many different purposes."]]},
+{s:21,e:"🛒",t:"How software is acquired",o:["Buy packaged software","Develop your own","Modify existing software","Buy hardware with software bundled","Download free software","Use software as a service"],
+k:"There are six ways to acquire software. We focus on packaged, custom-written and customised.",
+q:[["You walk into a store and buy a boxed copy of an office package.","Buy packaged software","Software bought from a store is packaged software."],
+["A company hires programmers to build its billing system from scratch.","Develop your own","Developing your own means writing it from scratch."],
+["A school takes a program it already has and changes it to suit its needs.","Modify existing software","Modifying changes software that already exists."],
+["Your new laptop arrives with programs already installed in the price.","Buy hardware with software bundled","The software comes bundled with the new hardware."],
+["You legally download a free open-source word processor.","Download free software","Free software can be downloaded legally from the Internet."],
+["You write documents in your browser using an app provided by an online company.","Use software as a service","Software as a service is provided by online companies."]]},
+{s:22,e:"📦",t:"Packaged, custom, customised",o:["Packaged","Custom-written","Customised"],
+k:"Packaged = off-the-shelf. Custom-written = built for you. Customised = you adjust it.",
+q:[["A farm co-op has unique delivery routes, so programmers write a system just for it.","Custom-written","Custom-written software is created for a company's unique requirements."],
+["Mass-produced, copyrighted, sold in stores to many users.","Packaged","Packaged is off-the-shelf, shrink-wrapped software."],
+["You add an add-in so your spreadsheet does a task automatically.","Customised","Customised software is adjusted by the user, for example with add-ins."],
+["Readily available and extensively tested, but not made just for you.","Packaged","That is the good point of packaged software."],
+["Costs more, takes longer to develop and may have flaws at first.","Custom-written","Those are the watch-outs for custom-written software."],
+["You change the options and preferences in your word processor to suit you.","Customised","You keep the familiar package and add features."]]},
+{s:23,e:"🎁",t:"How software is bundled",o:["Stand-alone","Software suite","Integrated"],
+k:"Suite = separate programs in one package. Integrated = one program with several functions.",
+q:[["An author buys only a word processor.","Stand-alone","Stand-alone software is sold on its own and covers one broad area."],
+["Word, Excel, PowerPoint and Access sold together. You can install any combination.","Software suite","A suite is several programs sold as one package."],
+["One program holds a word processor, spreadsheet and database. You cannot skip a part.","Integrated","Integrated software is all or nothing, like Microsoft Works."],
+["An accountant buys only Excel.","Stand-alone","One program for one broad area."],
+["Microsoft Office: often cheaper than buying each program separately.","Software suite","Suites are often cheaper than buying the programs separately."],
+["A single program with several functions inside it. It is all or nothing.","Integrated","Integrated is one program. A suite is separate programs."]]},
+{s:24,e:"🏆",t:"Integrated software",o:["Advantage","Disadvantage"],
+k:"Integrated software is great for a small business or home user who needs only the basics.",
+q:[["It needs less space because it is installed as one application.","Advantage","Less space is an advantage."],
+["It has fewer features than separate single-purpose programs.","Disadvantage","Fewer features is a disadvantage."],
+["Data is easily shared between the applications.","Advantage","Easy sharing of data is an advantage."],
+["It may not include every application you need.","Disadvantage","That is a disadvantage."],
+["It costs less than buying separate packages.","Advantage","Value for money is an advantage."],
+["Boss question: who is integrated software best for?","A small business operator or home user needing basic word processing, spreadsheet and database","It suits users who need only basic functions.",["A film studio editing feature films","A small business operator or home user needing basic word processing, spreadsheet and database","A bank running thousands of branches","An airline running flight control"]]]}
+];
+const $=s=>document.querySelector(s),sh=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+let G,rd,qs,qi,ok,tm,left,cur,locked;
+const hi=()=>{try{return+localStorage.getItem('ssHi')||0}catch(e){return 0}};
+const saveHi=()=>{try{if(G.xp>hi())localStorage.setItem('ssHi',G.xp)}catch(e){}};
+const bar=()=>`<div class="top" id="bar"><span>⭐ ${G.xp}</span><span>🔥 Streak ${G.streak}</span><span>🛟 ${G.ll}</span></div>`;
+function intro(){G={xp:0,streak:0,best:0,ll:3,stars:[],cor:0,tot:0};
+$('#app').innerHTML=`<h1>Software Showdown</h1><p class="mut">Grade 10 IT · Application software (slides 19 to 24)</p>
+<div class="fb"><b>How to play</b><p>Six levels, one for each slide. Answer fast for bonus points and keep a streak going for extra points.</p>
+<p>You have 3 🛟 lifelines. A lifeline removes wrong answers. You have 20 seconds per question.</p></div>
+<p class="mut">Your best score on this device: ${hi()}</p><button class="big" onclick="home()">Start playing</button>`}
+function home(){clearInterval(tm);
+$('#app').innerHTML=`${bar()}<h2>Pick a level</h2>${R.map((r,i)=>{const n=G.stars[i]||0;return`<button class="lvl" onclick="start(${i})"><b>${r.e} Level ${i+1}: ${r.t}</b><small>Slide ${r.s}</small><span>${'★'.repeat(n)+'☆'.repeat(3-n)}</span></button>`}).join('')}<button class="big ghost" onclick="fin()">Finish game and see my rank</button>`}
+function start(i){rd=i;qs=sh(R[i].q.slice());qi=0;ok=0;ask()}
+function ask(){const r=R[rd],q=qs[qi];
+const o=q[3]?q[3].slice():sh(r.o.filter(x=>x!==q[1])).slice(0,3).concat(q[1]);
+cur={q,o:sh(o)};locked=false;left=20;
+$('#app').innerHTML=`${bar()}<p><span class="tag">Slide ${r.s}</span> <span class="mut">${r.t} · question ${qi+1} of ${qs.length}</span></p>
+<div class="timer"><div id="tb"></div></div><p class="q">${q[0]}</p>
+${cur.o.map((t,i)=>`<button class="opt" onclick="pick(${i})">${t}</button>`).join('')}
+<div id="fb"></div><button class="big ghost" id="ll" onclick="life()" ${G.ll<1||cur.o.length<3?'disabled':''}>🛟 Use a lifeline</button>`;
+clearInterval(tm);tm=setInterval(()=>{left-=.1;$('#tb').style.width=Math.max(left,0)/20*100+'%';if(left<=0)pick(-1)},100)}
+function life(){if(locked||G.ll<1||cur.o.length<3)return;G.ll--;
+const w=sh([...document.querySelectorAll('.opt')].filter(b=>b.textContent!==cur.q[1]));
+w.slice(0,cur.o.length-2).forEach(b=>{b.disabled=true;b.style.visibility='hidden'});
+$('#ll').disabled=true;$('#bar').outerHTML=bar()}
+function pick(i){if(locked)return;locked=true;clearInterval(tm);const q=cur.q,right=i>=0&&cur.o[i]===q[1];let pts=0;G.tot++;
+if(right){G.streak++;G.best=Math.max(G.best,G.streak);pts=100+Math.round(left/20*50)+Math.min(G.streak-1,5)*10;G.xp+=pts;ok++;G.cor++}else G.streak=0;
+document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(b.textContent===q[1])b.classList.add('good');else if(j===i)b.classList.add('bad')});
+$('#bar').outerHTML=bar();
+$('#fb').innerHTML=`<div class="fb"><b>${right?'✅ Correct! +'+pts+' points':i<0?'⏰ Time is up':'❌ Not quite'}</b><p>${q[2]}</p></div><button class="big" onclick="nxt()">${qi+1<qs.length?'Next question':'Finish level'}</button>`;
+$('#ll').style.display='none'}
+const nxt=()=>{qi++;qi<qs.length?ask():rEnd()};
+function rEnd(){const p=ok/qs.length,st=p>=.8?3:p>=.6?2:ok>0?1:0;G.stars[rd]=Math.max(G.stars[rd]||0,st);saveHi();
+$('#app').innerHTML=`${bar()}<h2>Level ${rd+1} complete: ${ok} out of ${qs.length}</h2><div class="stars">${'★'.repeat(st)+'☆'.repeat(3-st)}</div>
+<div class="fb"><b>Remember (slide ${R[rd].s})</b><p>${R[rd].k}</p></div>
+${rd<5?`<button class="big" onclick="start(${rd+1})">Next level</button>`:`<button class="big" onclick="fin()">See my rank</button>`}
+<button class="big ghost" onclick="start(${rd})">Play this level again</button><button class="big ghost" onclick="home()">Back to levels</button>`}
+function fin(){clearInterval(tm);saveHi();const a=G.tot?Math.round(G.cor/G.tot*100):0;
+const rk=a>=90?'🏆 Software Legend':a>=75?'🥇 Software Specialist':a>=50?'🥈 App Explorer':'🌱 Byte Beginner';
+$('#app').innerHTML=`<h1>${G.tot?rk:'Ready when you are'}</h1><div class="fb">
+<div class="stat"><span>Total points</span><b>${G.xp}</b></div><div class="stat"><span>Accuracy</span><b>${a}%</b></div>
+<div class="stat"><span>Best streak</span><b>${G.best}</b></div><div class="stat"><span>Best score on this device</span><b>${hi()}</b></div></div>
+<p class="mut">Take a screenshot and challenge a classmate to beat your score.</p><button class="big" onclick="intro()">Play again</button>`}
+intro();
+</script></body></html>
